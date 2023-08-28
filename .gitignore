@@ -24,8 +24,6 @@ mlruns
 # IDE #
 *.vscode
 
-# Specific Challenges
-judgeabook
 
 # Challengify - test challengification files
 *_challengify*
