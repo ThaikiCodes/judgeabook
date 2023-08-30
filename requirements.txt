@@ -1,19 +1,19 @@
 wheel
 nbresult
 colorama
-ipdb
-ipykernel
+# ipdb #Before Predict in production
+# ipykernel #Before Predict in production
 yapf
-matplotlib
+# matplotlib #Before Predict in production
 pygeohash
-pytest
+# pytest #Before Predict in production
 seaborn
 numpy==1.23.5
 pandas==1.5.3
 scipy==1.10.0
 scikit-learn==1.2.1
-google-cloud-bigquery
-google-cloud-storage
+# google-cloud-bigquery
+# google-cloud-storage
 db-dtypes
 pyarrow
 # # Trick to install the version of Tensorflow depending on your processor: darwin == Mac, ARM == M1
@@ -38,3 +38,5 @@ httpx
 pytest-asyncio
 
 streamlit
+# Face Recognition Framework
+deepface==0.0.79

@@ -70,3 +70,10 @@ def add_bg_from_url():   ######NOT WORKING
 im = Image.open('/Users/yaren/Desktop/Chinese-zodiac-signs-Graphics-7010501-1.jpg')
 
 st.set_page_config(page_title="Surge Price Prediction App", page_icon = im)
+from deepface import DeepFace
+
+
+if __name__ == "__main__":
+    objs = DeepFace.analyze(img_path = "/Users/maria/Downloads/img3.jpeg",
+        actions = ['age', 'gender', 'race', 'emotion'])
+    print(objs)
