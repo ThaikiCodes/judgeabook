@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 import jsonpickle
 
-
 @dataclass
 class Zodiac:
     sign: str
