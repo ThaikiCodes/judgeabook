@@ -40,3 +40,4 @@ pytest-asyncio
 streamlit
 # Face Recognition Framework
 deepface==0.0.79
+python-multipart

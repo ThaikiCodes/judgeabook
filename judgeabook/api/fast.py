@@ -1,36 +1,43 @@
-import pandas as pd
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
+from deepface import DeepFace
+import base64
+import json
+import cv2
+
+import numpy as np
 
 app = FastAPI()
 
-# Allowing all middleware is optional, but good practice for dev purposes
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
-    allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
-)
 
-#app.state.model = load_model()
+@app.post("/files/")
+async def create_files(
+    request: Request,                                       # https://github.com/tiangolo/fastapi/issues/3327 (read image from request)
+):
+    image = await request.body()
 
-@app.get("/predict")
-def predict(image_file
-    ):
-    #formula
-    X_pred_mock = 5
-    # model = app.state.model
-    # assert model is not None
+    nparr = np.asarray(bytearray(image), dtype="uint8")     # https://www.geeksforgeeks.org/python-opencv-imdecode-function/ (convert bytes to image)
+    image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
-    # X_processed = preprocess_features(X_pred)
-    # y_pred = model.predict(X_processed)
-    y_pred_mock = 5 * X_pred_mock
+    obj = DeepFace.analyze(img_path=image, actions=('age',))
+    response = json.dumps(obj)
 
-    return y_pred_mock
+    return {"response": response}
+
 
 @app.get("/")
-def root():
-    # $CHA_BEGIN
-    return dict(greeting="Hello, judgeabook")
-    # $CHA_END
+async def main():
+    content = """
+<body>
+<form action="/files/" enctype="multipart/form-data" method="post">
+<input name="files" type="file" multiple>
+<input type="submit">
+</form>
+</body>
+    """
+    return HTMLResponse(content=content)
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app, host="0.0.0.0", port=8000)
