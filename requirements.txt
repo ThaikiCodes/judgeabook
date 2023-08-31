@@ -13,7 +13,7 @@ pandas==1.5.3
 scipy==1.10.0
 scikit-learn==1.2.1
 # google-cloud-bigquery
-# google-cloud-storage
+google-cloud-storage
 db-dtypes
 pyarrow
 # # Trick to install the version of Tensorflow depending on your processor: darwin == Mac, ARM == M1
@@ -41,3 +41,4 @@ streamlit
 # Face Recognition Framework
 deepface==0.0.79
 python-multipart
+jsonpickle
