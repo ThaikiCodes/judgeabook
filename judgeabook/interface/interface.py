@@ -5,13 +5,14 @@ import pandas as pd
 import requests
 from io import BytesIO
 import cv2
+from judgeabook import params
 
 
-url = 'http://localhost:8000/files/'  #ERROR HERE
+url = f'{params.SERVICE_URL}/files/'  #ERROR HERE
 st.markdown("""# Judging a book by its cover.
 ''Who are you?'''
 By analyzing your facial features, your personal characteristic traits will be predicted based on Chinese Horoscopes.""")
-image = Image.open('./assets/Zodiac-Wheel-2021-2022.jpg')
+image = Image.open(f'{params.ASSETS_PATH}/Zodiac-Wheel-2021-2022.jpg')
 st.image(image, caption='Chinese Zodiac Signs based on years')
 if st.button('Upload'):
     st.write('Your character traits are being predicted!')

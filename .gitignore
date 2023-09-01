@@ -1,5 +1,6 @@
 # raw_data/ --Thai add
 .env
+env.yaml
 
 # OS generated files #
 ######################

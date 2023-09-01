@@ -1,0 +1,51 @@
+# Judge a Book
+
+First of all, you will copy the env.sample.yaml to env.yaml and substitute all
+variables as needed.
+
+For the file .env.sample, copy to .env and substitute the values as needed.
+
+## Running locally
+
+```bash
+# start the api:
+make run_api
+
+# start the frontend
+streamlit --server.port $FRONTEND_PORT judgeabook/interface/interface.py
+```
+
+## Docker Build
+
+There is only one docker images for this project, `eu.gcr.io/wagon-bootcamp-392418/judgeabook`.
+To build it to run on GCP, use the following command:
+
+```bash
+docker docker build --platform linux/amd64 \
+  -t "${GCR_REGION}/${GCP_PROJECT}/${GCR_IMAGE}:0.0.1" .
+docker push "${GCR_REGION}/${GCP_PROJECT}/${GCR_IMAGE}:0.0.1"
+```
+
+## Deploying on Google Cloud
+
+### Deploying backend:
+
+```bash
+gcloud run deploy judgeabook-backend --image ${GCR_REGION}/${GCP_PROJECT}/${GCR_IMAGE}:0.0.1 \
+  --memory 8Gi --cpu 2 --region ${GCP_REGION} --env-vars-file env.yaml
+```
+
+After the command above is completed, the output will show the service url, that
+must be added to the `env.yaml` file on the variable SERVICE_URL.
+
+### Deploying frontend:
+
+```bash
+gcloud run deploy judgeabook-frontend --image ${GCR_REGION}/${GCP_PROJECT}/${GCR_IMAGE}:0.0.1 \
+  --memory 2Gi --region ${GCP_REGION} --env-vars-file env.yaml \
+  --command=streamlit,run,--server.port,8080,judgeabook/interface/interface.py
+```
+
+The output will show you the service url, copy the service url and paste on your
+browser. The streamlit page should appear, and you can upload a picture to test
+the application.

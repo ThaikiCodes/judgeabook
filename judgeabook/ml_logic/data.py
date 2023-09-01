@@ -27,18 +27,20 @@ class Data:
         current_year = datetime.date.today().year
         return current_year - age
 
-    def get_attributes(self, age):
+    def get_attributes(self, age, emotion):
         birth_year = self.__birthyear__(age)
         info = self.__df.loc[self.__df["year"] == birth_year]
 
         return Zodiac(
+            age = age,
             year = info["year"].values[0].item(),
             sign = info["zodiac_sign"].values[0],
             traits = [
                 info["trait_1"].values[0],
                 info["trait_2"].values[0],
                 info["trait_3"].values[0]
-                ]
+                ],
+            emotion = emotion,
         )
 
         print(z)

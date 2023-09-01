@@ -25,7 +25,7 @@ run_workflow:
 	PREFECT__LOGGING__LEVEL=${PREFECT_LOG_LEVEL} python -m judgeabook.interface.workflow
 
 run_api:
-	uvicorn judgeabook.api.fast:app --reload
+	uvicorn judgeabook.api.fast:app --host 0.0.0.0 --port ${BACKEND_PORT}
 
 # ##################### TESTS #####################
 # test_gcp_setup:

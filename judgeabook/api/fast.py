@@ -24,7 +24,9 @@ async def create_files(
     nparr = np.asarray(bytearray(image), dtype="uint8")     # https://www.geeksforgeeks.org/python-opencv-imdecode-function/ (convert bytes to image)
     image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
-    obj = DeepFace.analyze(img_path=image, actions=('age',))
+    obj = DeepFace.analyze(img_path=image, actions=('age','emotion'))
+
+    # obj = [{'age': 41, 'region': {'x': 260, 'y': 470, 'w': 959, 'h': 959}, 'emotion': {'angry': 9.047427695918486e-07, 'disgust': 1.8703599206118223e-15, 'fear': 5.437250584668096e-11, 'happy': 99.982351064682, 'sad': 1.7980640976134055e-06, 'surprise': 1.4686735028135445e-05, 'neutral': 0.0176409404957667}, 'dominant_emotion': 'happy'}]
 
     if len(obj) == 0:
         raise HTTPException(                                # https://stackoverflow.com/questions/68270330/how-to-return-status-code-in-response-correctly
@@ -33,7 +35,8 @@ async def create_files(
         )
 
     age = obj[0].get("age")
-    zodiac = app.data.get_attributes(age)
+    emotion = obj[0].get("dominant_emotion")
+    zodiac = app.data.get_attributes(age, emotion)
     response = json.dumps(zodiac.__dict__)
 
     return response
