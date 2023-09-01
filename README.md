@@ -5,6 +5,8 @@ variables as needed.
 
 For the file .env.sample, copy to .env and substitute the values as needed.
 
+The images for the interface are located in $ASSETS_PATH, by default ./judgeabook/interface/assets.
+
 ## Running locally
 
 ```bash
@@ -17,11 +19,11 @@ streamlit --server.port $FRONTEND_PORT judgeabook/interface/interface.py
 
 ## Docker Build
 
-There is only one docker images for this project, `eu.gcr.io/wagon-bootcamp-392418/judgeabook`.
+There is only one docker images for this project, `${GCR_REGION}/${GCP_PROJECT}/${GCR_IMAGE}:0.0.1`.
 To build it to run on GCP, use the following command:
 
 ```bash
-docker docker build --platform linux/amd64 \
+docker build --platform linux/amd64 \
   -t "${GCR_REGION}/${GCP_PROJECT}/${GCR_IMAGE}:0.0.1" .
 docker push "${GCR_REGION}/${GCP_PROJECT}/${GCR_IMAGE}:0.0.1"
 ```
@@ -49,3 +51,6 @@ gcloud run deploy judgeabook-frontend --image ${GCR_REGION}/${GCP_PROJECT}/${GCR
 The output will show you the service url, copy the service url and paste on your
 browser. The streamlit page should appear, and you can upload a picture to test
 the application.
+
+You can see your cloud run instances in https://console.cloud.google.com/run.
+Click on the frontend instance to get the URL if needed.
