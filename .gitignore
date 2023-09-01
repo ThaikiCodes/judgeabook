@@ -1,6 +1,7 @@
-raw_data/
-
+# raw_data/ --Thai add
 .env
+env.yaml
+.envrc
 
 # OS generated files #
 ######################
@@ -23,7 +24,6 @@ mlruns
 *.sqlite
 # IDE #
 *.vscode
-
 
 # Challengify - test challengification files
 *_challengify*

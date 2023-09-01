@@ -6,12 +6,12 @@ with open("requirements.txt") as f:
 requirements = [x.strip() for x in content if "git+" not in x]
 
 setup(name='judgeabook',
-      version="0.0.1",
+      version="0.0.12",
       description="Project Week 1307",
       license="MIT",
       author="Le Wagon",
       author_email="contact@lewagon.org",
-      #url="https://github.com/lewagon/taxi-fare",
+      #url="https://github.com/lewagon/judgeabook",
       install_requires=requirements,
       packages=find_packages(),
       test_suite="tests",
