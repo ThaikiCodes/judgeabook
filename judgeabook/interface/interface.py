@@ -19,49 +19,66 @@ emotions = {
     "sad": "sad"
 }
 
-def application():
-    url = f'{params.SERVICE_URL}/files/'  #ERROR HERE
-    st.markdown("""# Judging a book by its cover""")
-    st.markdown("Who are you?")
-    st.markdown("By analyzing your facial features, your personal characteristic traits will be predicted based on Chinese Horoscopes.")
-    image = Image.open(f'{params.ASSETS_PATH}/Zodiac-Wheel-2021-2022.jpg')
-    st.image(image, caption='Chinese Zodiac Signs based on years')
-    if st.button('Upload'):
-        st.write('Your character traits are being predicted!')
-    else:
-         print('')
-    st.set_option('deprecation.showfileUploaderEncoding', False)
-    uploaded_file = st.file_uploader("Please upload your picture", type=['jpeg','jpg','png'])
-    if uploaded_file is not None:
-        data_bytes = uploaded_file.getvalue()
-        uploaded_file.close()
+background_image = f"{params.ASSETS_PATH}/Page1.png"
+background_image_url = "https://storage.cloud.google.com/judgebook/pag2.png"
 
-        # st.write(data_bytes)
-        response = requests.post(url, data=data_bytes)
+CSS = '''
+h1 {{
+    color: #d96059;
+    }}
+.stApp {{
+    background-image: url({background_image_url});
+    background-size: cover;
+    background-color: #fff5ee;
+}}
+'''
+formatted_css = CSS.format(background_image_url=background_image_url)
+st.write(f'<style>{formatted_css}</style>', unsafe_allow_html= True)
 
-        if response.status_code ==200 :
-            result = response.json()
-            # st.write('API response : ', result)
-            result = json.loads(result)
-            emotion = emotions.get(result.get('emotion', 'neutral'), 'neutral')
-            st.subheader(f"You are a {emotion.capitalize()} {result['sign'].capitalize()}")
-            col1, col2 = st.columns([1,1], gap='small')
-            with col1:
-                st.image(data_bytes, width=300)
-            with col2:
-                sign = result['sign']
-                emotion = result['emotion']
-                if not os.path.isfile(f"{params.ASSETS_PATH}/signs/{sign}_{result['emotion']}.png"):
-                    sign = "unknown"
-                    emotion = "neutral"
-                st.image(f"{params.ASSETS_PATH}/signs/{sign}_{emotion}.png", width=300)
-            st.subheader("About you")
-            traits = result.get('traits')
-            st.markdown(f"You are {result['age']} years old and your traits are:")
-            st.markdown(f"{traits[0]}, {traits[1]} and {traits[2]}")
-        else:
-            # print(response.json())
-            st.error('Failed to upload image.')
+def prediction(tab):
+    with tab:
+        url = f'{params.SERVICE_URL}/files/'  #ERROR HERE
+        st.markdown("""# Judging a book by its cover""")
+        st.markdown("**Who are you?**")
+        st.markdown("By analyzing your facial features, your personal characteristic traits will be predicted based on Chinese Horoscopes.")
+        # image = Image.open(f'{params.ASSETS_PATH}/Zodiac-Wheel-2021-2022.jpg')
+        # st.image(image, caption='Chinese Zodiac Signs based on years')
+        # if st.button('Upload'):
+        #     st.write('Your character traits are being predicted!')
+        # else:
+        #     print('')
+        st.set_option('deprecation.showfileUploaderEncoding', False)
+        uploaded_file = st.file_uploader("Please upload your picture", type=['jpeg','jpg','png'])
+        if uploaded_file is not None:
+            data_bytes = uploaded_file.getvalue()
+            uploaded_file.close()
+
+            # st.write(data_bytes)
+            response = requests.post(url, data=data_bytes)
+
+            if response.status_code ==200 :
+                result = response.json()
+                # st.write('API response : ', result)
+                result = json.loads(result)
+                emotion = emotions.get(result.get('emotion', 'neutral'), 'neutral')
+                st.subheader(f"You are a {emotion.capitalize()} {result['sign'].capitalize()}")
+                col1, col2 = st.columns([1,1], gap='small')
+                with col1:
+                    st.image(data_bytes, width=300)
+                with col2:
+                    sign = result['sign']
+                    emotion = result['emotion']
+                    if not os.path.isfile(f"{params.ASSETS_PATH}/signs/{sign}_{result['emotion']}.png"):
+                        sign = "unknown"
+                        emotion = "neutral"
+                    st.image(f"{params.ASSETS_PATH}/signs/{sign}_{emotion}.png", width=300)
+                st.subheader("About you")
+                traits = result.get('traits')
+                st.markdown(f"You are {result['age']} years old and your traits are:")
+                st.markdown(f"{traits[0]}, {traits[1]} and {traits[2]}")
+            else:
+                # print(response.json())
+                st.error('Failed to upload image.')
 
 
 def about():
@@ -84,26 +101,65 @@ def team_cards(user_names, user_info, image_path):
             st.markdown(user_info[i].replace("\n",
             "<br>"), unsafe_allow_html=True)
 
-def team():
-    st.subheader("Team", divider="rainbow")
+def introduction(tab):
+    with tab:
+        st.image(f"{params.ASSETS_PATH}/Pink Modern Lunar New Year Party Invitation.png")
 
-    user_name = ["Thai Dao",
-                 "Maria Escalante-Rojas",
-                 "Yaren Merve Akin",
-                 "Martin Meckel" ]
-    user_info = ["I studied Business Intelligence and Smart Services in my Masters. Then became a Strategy Consultant.",
-                 "I'm a biologist, master's degree in science.",
-                 "I studied Industrial Engineering. I want to improve myself on artificial intelligence.",
-                 "Political Scientist and Economist by education. Into books, sports, coffee, concerts."]
-    image_path = [f"{params.ASSETS_PATH}/Thai.png",
-                  f"{params.ASSETS_PATH}/Maria.png",
-                  f"{params.ASSETS_PATH}/Yaren.png",
-                  f"{params.ASSETS_PATH}/Martin.png"
-                  ]
+def history(tab):
+    with tab:
+        st.subheader("Can you judge a book by its cover?")
 
-    team_cards(user_name, user_info, image_path)
+        st.markdown("""
+    - People are complex and it's not easy to judge people solely based on appearance
+    - **However, first impressions** can have significant psychological effects on individuals
+    - Studies showed: **people can make judgments** about a person's trustworthiness and competence based on
+    **very brief exposures to their facial expressions**""")
+
+        st.subheader("Chinese Zodiac Signs")
+
+        left_co, center_co, last_co = st.columns([0.1,0.6,0.3])
+        with center_co:
+            st.image(f"{params.ASSETS_PATH}/Zodiac-Wheel-2021-2022.jpg", width=500)
+
+
+
+        st.markdown("""
+    - Chinese astrological **framework** for **understanding personality traits**
+    - People's zodiac signs are determined by their **birth year**, and each year is **associated** with
+    one of the **twelve animal** signs
+    - Each **sign is associated** with **specific personality traits and characteristics**""")
+        st.subheader("Using Deep Learning to map a face to positive character traits")
+        st.markdown("""
+    - Use of **convolutional neural network** to analyse faces
+    - **Predict character traits** based on facial characteristics
+                        """)
+
+def team(tab):
+    with tab:
+        st.subheader("Team", divider="rainbow")
+
+        user_name = ["Thai Dao",
+                    "Maria Escalante-Rojas",
+                    "Yaren Merve Akin",
+                    "Martin" ]
+        user_info = ["I studied Business Intelligence and Smart Services in my Masters. Then became a Strategy Consultant.",
+                    "I'm a biologist, master's degree in science.",
+                    "I studied Industrial Engineering. I want to improve myself on artificial intelligence.",
+                    "Political Scientist and Economist by education. Into books, sports, coffee, concerts."]
+        image_path = [f"{params.ASSETS_PATH}/Thai.png",
+                    f"{params.ASSETS_PATH}/Maria.png",
+                    f"{params.ASSETS_PATH}/Yaren.png",
+                    f"{params.ASSETS_PATH}/Martin.png"
+                    ]
+
+        team_cards(user_name, user_info, image_path)
+
 
 if __name__ == "__main__":
-    about()
-    application()
-    team()
+    tab1, tab2, tab3, tab4, tab5 = st.tabs(["Introduction", "History", "Process", "Prediction", "About Us"])
+    # about()
+    # application()
+    introduction(tab1)
+    history(tab2)
+    prediction(tab4)
+    team(tab5)
