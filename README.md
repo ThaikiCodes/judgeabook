@@ -13,8 +13,8 @@ The images for the interface are located in $ASSETS_PATH, by default ./judgeaboo
 # start the api:
 make run_api
 
-# start the frontend
-streamlit --server.port $FRONTEND_PORT judgeabook/interface/interface.py
+# open local
+streamlit run judgeabook/interface/interface.py --server.port $FRONTEND_PORT --theme.backgroundColor $BACKGROUND_COLOR
 ```
 
 ## Docker Build
@@ -45,7 +45,7 @@ must be added to the `env.yaml` file on the variable SERVICE_URL.
 ```bash
 gcloud run deploy judgeabook-frontend --image ${GCR_REGION}/${GCP_PROJECT}/${GCR_IMAGE}:0.0.1 \
   --memory 2Gi --region ${GCP_REGION} --env-vars-file env.yaml \
-  --command=streamlit,run,--server.port,8080,judgeabook/interface/interface.py
+  --command=streamlit,run,--server.port,8080,--theme.backgroundColor,"${BACKGROUND_COLOR}",judgeabook/interface/interface.py
 ```
 
 The output will show you the service url, copy the service url and paste on your
