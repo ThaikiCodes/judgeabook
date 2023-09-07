@@ -9,6 +9,14 @@ from judgeabook import params
 import json
 import os
 
+
+st.set_page_config(
+    page_title="Judgeabook",
+    page_icon="🐉",
+    layout="wide",
+    initial_sidebar_state="collapsed")
+
+
 emotions = {
     "angry": "angry",
     "disgust": "disgusted",
@@ -19,67 +27,56 @@ emotions = {
     "sad": "sad"
 }
 
-background_image = f"{params.ASSETS_PATH}/Page1.png"
-background_image_url = "https://storage.cloud.google.com/judgebook/pag2.png"
+
+background_image = "https://storage.googleapis.com/judgeabook-assets/assets/Model-Background-1.png"
 
 CSS = '''
 h1 {{
     color: #d96059;
     }}
 .stApp {{
-    background-image: url({background_image_url});
+    background-image: url({background_image});
     background-size: cover;
     background-color: #fff5ee;
-}}
+    }}
 '''
-formatted_css = CSS.format(background_image_url=background_image_url)
+formatted_css = CSS.format(background_image=background_image)
 st.write(f'<style>{formatted_css}</style>', unsafe_allow_html= True)
 
-def prediction(tab):
+
+def project(tab):
     with tab:
-        url = f'{params.SERVICE_URL}/files/'  #ERROR HERE
-        st.markdown("""# Judging a book by its cover""")
-        st.markdown("**Who are you?**")
-        st.markdown("By analyzing your facial features, your personal characteristic traits will be predicted based on Chinese Horoscopes.")
-        # image = Image.open(f'{params.ASSETS_PATH}/Zodiac-Wheel-2021-2022.jpg')
-        # st.image(image, caption='Chinese Zodiac Signs based on years')
-        # if st.button('Upload'):
-        #     st.write('Your character traits are being predicted!')
-        # else:
-        #     print('')
-        st.set_option('deprecation.showfileUploaderEncoding', False)
-        uploaded_file = st.file_uploader("Please upload your picture", type=['jpeg','jpg','png'])
-        if uploaded_file is not None:
-            data_bytes = uploaded_file.getvalue()
-            uploaded_file.close()
+        # col0, col1 = st.columns([0.1, 0.9], gap="small")
+        # with col1:
+        st.image(f"{params.ASSETS_PATH}/Project-Title.png")
 
-            # st.write(data_bytes)
-            response = requests.post(url, data=data_bytes)
 
-            if response.status_code ==200 :
-                result = response.json()
-                # st.write('API response : ', result)
-                result = json.loads(result)
-                emotion = emotions.get(result.get('emotion', 'neutral'), 'neutral')
-                st.subheader(f"You are a {emotion.capitalize()} {result['sign'].capitalize()}")
-                col1, col2 = st.columns([1,1], gap='small')
-                with col1:
-                    st.image(data_bytes, width=300)
-                with col2:
-                    sign = result['sign']
-                    emotion = result['emotion']
-                    if not os.path.isfile(f"{params.ASSETS_PATH}/signs/{sign}_{result['emotion']}.png"):
-                        sign = "unknown"
-                        emotion = "neutral"
-                    st.image(f"{params.ASSETS_PATH}/signs/{sign}_{emotion}.png", width=300)
-                st.subheader("About you")
-                traits = result.get('traits')
-                st.markdown(f"You are {result['age']} years old and your traits are:")
-                st.markdown(f"{traits[0]}, {traits[1]} and {traits[2]}")
-            else:
-                # print(response.json())
-                st.error('Failed to upload image.')
+def introduction(tab):
+    with tab:
+        st.subheader("Can you judge a book by its cover?")
+        st.markdown("""
+    - Humans are complex and we should not judge — **but we all do!**
+    - Studies have shown that opinions about people are formed within **milliseconds**.""")
 
+        col1, col2 = st.columns([0.45, 0.55], gap="large")
+        with col1:
+            st.subheader("Chinese Zodiac Signs")
+        # left_co, center_co, last_co = st.columns([0.1,0.6,0.3])
+        # left_co, center_co, last_co = st.columns([0.3,0.4,0.3])
+        # with center_co:
+        #     st.image(f"{params.ASSETS_PATH}/Zodiac-Wheel-2021-2022.jpg", width=500)
+            st.markdown("""
+    - Astrological **framework** that links the year of birth to specific character traits.""")
+            st.text("")
+            st.image(f"{params.ASSETS_PATH}/Zodiac-Wheel-2021-2022.jpg", width=500)
+
+        with col2:
+            st.subheader("Deep Learning Facial Recognition Model")
+            st.markdown("""
+    - A pretrained Model was used for Face Recognition (DeepFace).
+    - **Predict character traits** and emotion based on age and facial features.
+                        """)
+            st.image(f"{params.ASSETS_PATH}/facial_recognition.png", width=500)
 
 def about():
     st.header(""":orange[What are Chinese Zodiac Signs? :dragon:]""")
@@ -93,59 +90,74 @@ def about():
         image = Image.open(f"{params.ASSETS_PATH}/5741_Horoscope-wheel-removebg-preview.jpg")
         st.image(image, caption='Chinese Zodiac Signs based on years' , width=450)
 
+
+def prediction(tab):
+    with tab:
+        url = f'{params.SERVICE_URL}/files/'
+        st.markdown("""# Judging a book by its cover""")
+        st.markdown("**Who are you?**")
+        st.markdown("By analyzing your facial features, your personal characteristic traits will be predicted based on Chinese Horoscopes.")
+        # image = Image.open(f"{params.ASSETS_PATH}/example.png")
+        # st.image(image, caption='You will see with our model',width=400)
+        st.set_option('deprecation.showfileUploaderEncoding', False)
+        uploaded_file = st.file_uploader("Please upload your picture.", type=['jpeg','jpg','png'])
+        if uploaded_file is not None:
+            data_bytes = uploaded_file.getvalue()
+            uploaded_file.close()
+
+            # st.write(data_bytes)
+            response = requests.post(url, data=data_bytes)
+
+            if response.status_code ==200 :
+                result = response.json()
+                # st.write('API response : ', result)
+                result = json.loads(result)
+                emotion = emotions.get(result.get('emotion', 'neutral'), 'neutral')
+                # st.subheader(f"You are a {emotion.capitalize()} {result['sign'].capitalize()}")
+                col0, col1, col2 = st.columns([0.1,0.4,0.5], gap='small')
+                with col1:
+                    st.subheader(f"You are a {emotion.capitalize()} {result['sign'].capitalize()}")
+                    st.image(data_bytes, width=450)
+                    st.subheader("About you ...")
+                    traits = result.get('traits')
+                    st.subheader(f"You are {result['age']} years old and your traits are:")
+                    st.subheader(f"{traits[0]}, {traits[1]} and {traits[2]}")
+                with col2:
+                    st.text("")
+                    st.text("")
+                    st.text("")
+                    st.text("")
+                    sign = result['sign']
+                    emotion = result['emotion']
+                    if not os.path.isfile(f"{params.ASSETS_PATH}/signs/{sign}_{result['emotion']}.png"):
+                        sign = "unknown"
+                        emotion = "neutral"
+                    st.image(f"{params.ASSETS_PATH}/signs/{sign}_{emotion}.png", width=450)
+            else:
+                # print(response.json())
+                st.error('Failed to upload image.')
+
+
 def team_cards(user_names, user_info, image_path):
-    for i, col in enumerate(st.columns([1, 1, 1, 1], gap="large")):
+    for i, col in enumerate(st.columns([1, 1, 1, 1], gap="medium")):
         with col:
-            st.image(image_path[i], width=100)
+            st.image(image_path[i], width=250)
             st.subheader(f"{user_names[i]}")
             st.markdown(user_info[i].replace("\n",
             "<br>"), unsafe_allow_html=True)
-
-def introduction(tab):
-    with tab:
-        st.image(f"{params.ASSETS_PATH}/Pink Modern Lunar New Year Party Invitation.png")
-
-def history(tab):
-    with tab:
-        st.subheader("Can you judge a book by its cover?")
-
-        st.markdown("""
-    - People are complex and it's not easy to judge people solely based on appearance
-    - **However, first impressions** can have significant psychological effects on individuals
-    - Studies showed: **people can make judgments** about a person's trustworthiness and competence based on
-    **very brief exposures to their facial expressions**""")
-
-        st.subheader("Chinese Zodiac Signs")
-
-        left_co, center_co, last_co = st.columns([0.1,0.6,0.3])
-        with center_co:
-            st.image(f"{params.ASSETS_PATH}/Zodiac-Wheel-2021-2022.jpg", width=500)
-
-
-
-        st.markdown("""
-    - Chinese astrological **framework** for **understanding personality traits**
-    - People's zodiac signs are determined by their **birth year**, and each year is **associated** with
-    one of the **twelve animal** signs
-    - Each **sign is associated** with **specific personality traits and characteristics**""")
-        st.subheader("Using Deep Learning to map a face to positive character traits")
-        st.markdown("""
-    - Use of **convolutional neural network** to analyse faces
-    - **Predict character traits** based on facial characteristics
-                        """)
 
 def team(tab):
     with tab:
         st.subheader("Team", divider="rainbow")
 
-        user_name = ["Thai Dao",
-                    "Maria Escalante-Rojas",
-                    "Yaren Merve Akin",
-                    "Martin" ]
-        user_info = ["I studied Business Intelligence and Smart Services in my Masters. Then became a Strategy Consultant.",
-                    "I'm a biologist, master's degree in science.",
-                    "I studied Industrial Engineering. I want to improve myself on artificial intelligence.",
-                    "Political Scientist and Economist by education. Into books, sports, coffee, concerts."]
+        user_name = ["Thai",
+                    "Maria",
+                    "Yaren",
+                    "Martin and Benji" ]
+        user_info = ["Has a background in International\nBusiness and Business Intelligence.\nHe also worked in a start-up and a\nconsultancy. His interests lie in doing\nsports and meditating.",
+                    "She is a Biologist and has broad experience\nin clinical and environmental research.\nShe would like to work on computer\nvision research in the automotive field.\nAnd she likes cats.",
+                    "She has a background in Industrial\nEngineering. She has done Data\nAnalytics. Her next goal is studying\nArtificial Intelligence.",
+                    "Studied politics and economics.\nBesides traveling he enjoys sports,\ncoffee and a good (or bad) book."]
         image_path = [f"{params.ASSETS_PATH}/Thai.png",
                     f"{params.ASSETS_PATH}/Maria.png",
                     f"{params.ASSETS_PATH}/Yaren.png",
@@ -154,12 +166,12 @@ def team(tab):
 
         team_cards(user_name, user_info, image_path)
 
+        if st.button('Thanks 🎈🎈🎈!'):
+            st.balloons()
 
 if __name__ == "__main__":
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(["Introduction", "History", "Process", "Prediction", "About Us"])
-    # about()
-    # application()
-    introduction(tab1)
-    history(tab2)
-    prediction(tab4)
-    team(tab5)
+    tab1, tab2, tab3, tab4 = st.tabs(["Project", "Introduction", "Prediction", "About Us"])
+    project(tab1)
+    introduction(tab2)
+    prediction(tab3)
+    team(tab4)

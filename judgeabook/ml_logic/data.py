@@ -11,7 +11,6 @@ class Data:
         self.__bucket = self.__storage_client.bucket(params.BUCKET_NAME)
         self.__df = None
 
-
     def load_data(self): # baixa os dados do GCS
         blob = self.__bucket.blob(params.DATASET_NAME)
 
@@ -42,11 +41,6 @@ class Data:
                 ],
             emotion = emotion,
         )
-
-
-
-
-
 
 
 if __name__ == "__main__":
