@@ -28,7 +28,7 @@ emotions = {
 }
 
 
-background_image = "https://storage.googleapis.com/judgeabook-assets/assets/Model-Background-1.png"
+background_image = "https://storage.googleapis.com/judgeabook-assets/assets/Model-Background-Final.png"
 
 CSS = '''
 h1 {{
@@ -66,8 +66,9 @@ def introduction(tab):
         # with center_co:
         #     st.image(f"{params.ASSETS_PATH}/Zodiac-Wheel-2021-2022.jpg", width=500)
             st.markdown("""
-    - Astrological **framework** that links the year of birth to specific character traits.""")
-            st.text("")
+    - Astrological **framework** that links the year of birth to specific character traits.
+    - _Example:_ **Born:** 2023 => **Zodiac:** Rabbit => **Trait:** elegant, responsible and friendly.
+    """)
             st.image(f"{params.ASSETS_PATH}/Zodiac-Wheel-2021-2022.jpg", width=500)
 
         with col2:
